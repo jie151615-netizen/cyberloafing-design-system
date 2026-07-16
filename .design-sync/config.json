@@ -1,0 +1,16 @@
+{
+  "projectId": "577a5a76-23be-4aaf-b1c0-22a01af3a67e",
+  "pkg": "cyberloafing-design",
+  "globalName": "Cyberloafing",
+  "shape": "package",
+  "tokensPkg": "cyberloafing-design",
+  "tokensGlob": "tokens/*.css",
+  "extraFonts": ["tokens/typography.css"],
+  "cssEntry": "tokens/colors.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "SectionHeader": { "cardMode": "column" },
+    "StampStrip": { "cardMode": "column" },
+    "MethodCard": { "cardMode": "column" }
+  }
+}

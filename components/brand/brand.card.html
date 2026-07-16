@@ -1,0 +1,65 @@
+<!-- @dsCard group="Components" viewport="700x560" name="Brand — masthead, mark, badges" subtitle="SectionHeader, FishMark, PageBadge, RegisterTag, StampStrip" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../../styles.css" />
+<style>
+  body { margin: 0; background: var(--surface-page); font-family: var(--font-sans); }
+  #root { padding: 40px; display: flex; flex-direction: column; gap: 40px; }
+  .row { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+  .lbl { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-50); margin-bottom: 12px; }
+  .box { border-top: 2px solid var(--ink-25); padding-top: 16px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/plain" id="app">
+  const NS = window.Cyberloafing || Object.values(window).find(v => v && v.FishMark && v.SectionHeader) || {};
+  const { FishMark, SectionHeader, PageBadge, RegisterTag, StampStrip } = NS;
+  function Demo() {
+    return (
+      <React.Fragment>
+        <div className="box">
+          <div className="lbl">SectionHeader</div>
+          <SectionHeader title="Cyberloafing" subtitle="摸鱼" size="h1" />
+        </div>
+        <div className="box">
+          <div className="lbl">FishMark</div>
+          <div className="row">
+            <FishMark size={100} />
+            <FishMark size={64} color="var(--red)" flip />
+          </div>
+        </div>
+        <div className="box">
+          <div className="lbl">PageBadge · RegisterTag</div>
+          <div className="row">
+            <PageBadge number={5} />
+            <PageBadge number={10} color="var(--coral)" />
+            <RegisterTag level="light" />
+            <RegisterTag level="mid" />
+            <RegisterTag level="high" />
+          </div>
+        </div>
+        <div className="box">
+          <div className="lbl">StampStrip</div>
+          <div className="row">
+            <StampStrip text="WORKING" repeat={5} direction="horizontal" />
+            <StampStrip text="NOT IN CYBERLOAFING" repeat={2} direction="horizontal" color="var(--coral)" />
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+<script>
+  const src = document.getElementById("app").textContent;
+  (0, eval)(Babel.transform(src, { presets: [["react", { runtime: "classic" }]] }).code);
+</script>
+</body>
+</html>

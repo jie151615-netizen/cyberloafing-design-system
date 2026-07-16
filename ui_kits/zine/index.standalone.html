@@ -1,0 +1,275 @@
+<!-- @dsCard group="Zine" viewport="960x960" name="Cyberloafing Manual — spreads" subtitle="Interactive recreation of the manual, built from the DS components" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cyberloafing Manual — UI kit</title>
+<link rel="stylesheet" href="../../styles.css" />
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #e9e6df; font-family: var(--font-sans); color: var(--ink); }
+  #root { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+  .stage { width: 960px; }
+  .page {
+    position: relative; width: 960px; height: 960px; background: var(--paper);
+    overflow: hidden; box-shadow: 0 24px 60px rgba(19,49,79,.18);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 960px; margin-top: 16px; color: #6b6559; font-size: 13px; letter-spacing: .04em;
+  }
+  .nav button {
+    font: inherit; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    border: 2px solid var(--ink); background: var(--paper); color: var(--ink);
+    padding: 10px 20px; border-radius: 999px; cursor: pointer; transition: all .15s;
+  }
+  .nav button:hover { background: var(--ink); color: var(--paper); }
+  .dots { display: flex; gap: 8px; }
+  .dot { width: 9px; height: 9px; border-radius: 999px; background: var(--ink-25); cursor: pointer; border: none; padding: 0; }
+  .dot.on { background: var(--red); }
+</style>
+<meta name="ext-resource-dependency" content="../../assets/illustrations/objects/cup.png" data-resource-id="cup" />
+<meta name="ext-resource-dependency" content="../../assets/illustrations/objects/headphones.png" data-resource-id="headphones" />
+<meta name="ext-resource-dependency" content="../../assets/illustrations/objects/eye-mask.png" data-resource-id="eye_mask" />
+<meta name="ext-resource-dependency" content="../../assets/illustrations/objects/plant.png" data-resource-id="plant" />
+<meta name="ext-resource-dependency" content="../../assets/illustrations/objects/toilet-paper.png" data-resource-id="toilet_paper" />
+<meta name="ext-resource-dependency" content="../../assets/illustrations/objects/hat.png" data-resource-id="hat" />
+<meta name="ext-resource-dependency" content="../../assets/illustrations/objects/snack.png" data-resource-id="snack" />
+<template id="__bundler_thumbnail" data-bg-color="#e9e6df">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#e9e6df"/>
+    <rect x="220" y="150" width="760" height="500" rx="10" fill="#ffffff"/>
+    <text x="270" y="360" font-family="sans-serif" font-weight="900" font-size="96" fill="#13314f">CYBER</text>
+    <text x="270" y="450" font-family="sans-serif" font-weight="900" font-size="96" fill="#13314f">LOAFING</text>
+    <text x="270" y="520" font-family="sans-serif" font-weight="700" font-size="44" fill="#dc2b33">摸鱼</text>
+    <g stroke="#13314f" stroke-width="6" fill="none" stroke-linejoin="round" stroke-linecap="round" transform="translate(640,560) scale(1.05)">
+      <path d="M0 0 L30 43 L0 86 Z"/>
+      <path d="M28 43 C58 20 118 4 167 5 C212 6 252 22 279 38 C281 42 281 44 279 48 C252 64 212 80 167 81 C118 82 58 66 28 43 Z"/>
+      <path d="M230 15 Q214 43 230 72"/>
+    </g>
+    <circle cx="892" cy="599" r="6" fill="#13314f"/>
+  </svg>
+</template>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/plain" id="app">
+const { useState } = React;
+const R = window.__resources || {};
+const OBJMAP = { "cup.png":R.cup, "headphones.png":R.headphones, "eye-mask.png":R["eye_mask"], "plant.png":R.plant, "toilet-paper.png":R["toilet_paper"], "hat.png":R.hat, "snack.png":R.snack };
+const OBJ = ""; const O = n => OBJMAP[n] || ("../../assets/illustrations/objects/"+n);
+
+/* ---- DS primitives (mirror of components/, inlined so the kit renders
+        standalone; consumers import these from window.Cyberloafing) ---- */
+
+function FishMark({ size = 64, color = "var(--ink)", flip }) {
+  return (
+    <svg width={size} height={size*86/280} viewBox="-3 -3 286 92" fill="none"
+         style={{ display:"block", transform: flip?"scaleX(-1)":undefined }}>
+      <g stroke={color} strokeWidth="2" fill="none" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke">
+        <path d="M0 0 L30 43 L0 86 Z"/>
+        <path d="M28 43 C58 20 118 4 167 5 C212 6 252 22 279 38 C281 42 281 44 279 48 C252 64 212 80 167 81 C118 82 58 66 28 43 Z"/>
+        <path d="M230 15 Q214 43 230 72"/>
+      </g><circle cx="252" cy="39" r="2.6" fill={color}/>
+    </svg>
+  );
+}
+function SectionHeader({ title, subtitle, fs="var(--fs-display)", color="var(--ink)", sub="var(--red)", align="left" }) {
+  return (
+    <header style={{ display:"flex", flexDirection:"column", gap:8, textAlign:align,
+                     alignItems: align==="center"?"center":"flex-start" }}>
+      <h2 style={{ margin:0, fontWeight:900, fontSize:fs, lineHeight:.98, letterSpacing:"-.01em",
+                   textTransform:"uppercase", color }}>{title}</h2>
+      {subtitle && <p style={{ margin:0, fontWeight:500, fontSize:"var(--fs-h3)", letterSpacing:".08em", color:sub }}>{subtitle}</p>}
+    </header>
+  );
+}
+function PageBadge({ number, color="var(--red)", size=44 }) {
+  return <span style={{ display:"inline-flex", alignItems:"center", justifyContent:"center",
+    width:size, height:size, borderRadius:999, border:`2px solid ${color}`, color,
+    fontWeight:500, fontSize:size*.42, lineHeight:1 }}>{number}</span>;
+}
+const REG = { light:{zh:"浅摸鱼",en:"LIGHT",c:"var(--mint)",i:"var(--ink)"},
+              mid:{zh:"中摸鱼",en:"MODERATE",c:"var(--coral)",i:"#fff"},
+              high:{zh:"高摸鱼",en:"HIGH",c:"var(--red)",i:"#fff"} };
+function RegisterTag({ level="light", color, ink }) {
+  const r = REG[level];
+  return <span style={{ display:"inline-flex", alignItems:"baseline", gap:8, padding:"8px 16px",
+    borderRadius:999, background:color||r.c, color:ink||r.i, lineHeight:1 }}>
+    <b style={{ fontSize:15, letterSpacing:".06em" }}>{r.zh}</b>
+    <span style={{ fontSize:12, opacity:.85, letterSpacing:".01em" }}>{r.en}</span></span>;
+}
+function StarIndex({ rows, color="var(--red)", labelColor="var(--ink-70)" }) {
+  return <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+    {rows.map((r,i)=>(
+      <div key={i} style={{ display:"flex", alignItems:"center", gap:12, fontSize:15, color:"var(--ink-70)" }}>
+        <span style={{ minWidth:150, color:labelColor }}>{r.label}</span>
+        <span style={{ color, letterSpacing:"2px" }}>{"★".repeat(r.value)}<span style={{ color:"var(--ink-25)" }}>{"★".repeat((r.max||6)-r.value)}</span></span>
+      </div>))}
+  </div>;
+}
+function ProductCard({ image, name, description, field="var(--mint-wash)", fill }) {
+  return <article style={{ display:"flex", flexDirection:"column", borderRadius:8, overflow:"hidden",
+    background:"#fff", boxShadow:"var(--shadow-card)", height: fill?"100%":undefined }}>
+    <div style={{ ...(fill?{flex:1,minHeight:0}:{aspectRatio:"4/3"}), background:field, display:"flex", alignItems:"center",
+      justifyContent:"center", padding:16 }}>
+      <img src={image} alt={name} style={{ maxWidth:"100%", maxHeight:"100%", objectFit:"contain" }}/></div>
+    <div style={{ padding:"12px 16px", display:"flex", flexDirection:"column", gap:4 }}>
+      <h4 style={{ margin:0, fontWeight:700, fontSize:17 }}>{name}</h4>
+      <p style={{ margin:0, fontSize:12.5, lineHeight:1.4, color:"var(--ink-70)" }}>{description}</p></div>
+  </article>;
+}
+
+/* ---- Spreads ---- */
+
+function CoverSpread() {
+  return (
+    <div className="page" style={{ display:"flex", flexDirection:"column", justifyContent:"space-between", padding:72 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", fontSize:14, letterSpacing:".1em", color:"var(--ink-70)" }}>
+        <span>CYBERLOAFING MANUAL</span><span>2022 · EN / 中文</span>
+      </div>
+      <div>
+        <h1 style={{ margin:0, fontWeight:900, fontSize:130, lineHeight:.92, letterSpacing:"-.02em", color:"var(--ink)" }}>CYBER<br/>LOAFING</h1>
+        <p style={{ margin:"18px 0 0", fontWeight:500, fontSize:44, letterSpacing:".12em", color:"var(--red)" }}>摸鱼</p>
+      </div>
+      <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between" }}>
+        <p style={{ margin:0, maxWidth:420, fontSize:18, lineHeight:1.55, color:"var(--ink-70)" }}>
+          A field manual for the fine art of touching fish — resting on company time without getting caught.</p>
+        <FishMark size={180} color="var(--ink)"/>
+      </div>
+    </div>
+  );
+}
+
+function OpenerSpread() {
+  return (
+    <div className="page" style={{ position:"relative", padding:72,
+      display:"flex", flexDirection:"column", justifyContent:"space-between" }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start",
+        fontSize:14, letterSpacing:".1em", color:"var(--ink-70)" }}>
+        <span>INTRODUCTION</span><span>引言</span>
+      </div>
+
+      <div style={{ maxWidth:720 }}>
+        <h2 style={{ margin:0, fontWeight:900, fontSize:96, lineHeight:.94, letterSpacing:"-.02em",
+          textTransform:"uppercase", color:"var(--ink)" }}>
+          There Are<br/>Many Ways<br/>To Rest</h2>
+        <p style={{ margin:"20px 0 0", fontWeight:500, fontSize:30, letterSpacing:".06em", color:"var(--red)" }}>
+          休息有很多种方式</p>
+      </div>
+
+      <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", gap:40 }}>
+        <p style={{ margin:0, maxWidth:460, fontSize:20, lineHeight:1.55, color:"var(--ink)" }}>
+          Achieving light cyberloafing is the easiest way to enjoy basic rest. As the risk
+          rises, so does the reward — every technique is graded across three registers.</p>
+        <div style={{ display:"flex", flexDirection:"column", gap:12, alignItems:"flex-end" }}>
+          <RegisterTag level="light" color="#EBC3C6" ink="#FFFFFF"/><RegisterTag level="mid"/><RegisterTag level="high"/>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MethodSpread({ number, register, accent, field, title, lead, indices, defuse, img, imgName, regColor, regInk, idxLabelColor }) {
+  // PDF method-page layout: full-height color field on the right holding a LARGE
+  // prop illustration (detail reads clearly); all text stacked down the left column.
+  return (
+    <div className="page" style={{ position:"relative" }}>
+      {/* Illustration on plain white, bleeding off the right edge — large so detail reads */}
+      <div style={{ position:"absolute", top:0, right:0, bottom:0, width:490,
+        display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
+        <img src={img} alt={imgName} style={{ width:"100%", height:"100%", objectFit:"contain" }}/>
+      </div>
+
+      {/* Left text column */}
+      <div style={{ position:"absolute", top:72, left:72, bottom:72, width:400,
+        display:"flex", flexDirection:"column" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:16 }}>
+          <PageBadge number={number} color={accent}/>
+          <RegisterTag level={register} color={regColor} ink={regInk}/>
+        </div>
+        <h3 style={{ margin:"28px 0 0", fontWeight:900, fontSize:82, lineHeight:.96,
+          letterSpacing:"-.015em", textTransform:"uppercase", color:accent }}>{title}</h3>
+        <p style={{ margin:"20px 0 0", fontSize:22, lineHeight:1.42, color:accent }}>{lead}</p>
+
+        <div style={{ marginTop:"auto" }}>
+          <p style={{ margin:"0 0 2px", fontWeight:900, fontSize:52, lineHeight:.92, color:accent }}>HOW</p>
+          <p style={{ margin:"0 0 18px", fontWeight:500, fontSize:22, letterSpacing:".01em",
+            textTransform:"uppercase", color:accent }}>To Defuse Being Caught?</p>
+          <div style={{ marginBottom:20 }}><StarIndex rows={indices} color={accent} labelColor={idxLabelColor}/></div>
+          <p style={{ margin:0, fontSize:16, lineHeight:1.6, color:accent }}>{defuse}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ApplianceSpread() {
+  return (
+    <div className="page" style={{ padding:"72px", display:"flex", flexDirection:"column", gap:28 }}>
+      <SectionHeader title="Appliance" subtitle="用具" fs="var(--fs-h1)"/>
+      <div style={{ flex:1, minHeight:0, display:"grid", gridTemplateColumns:"repeat(3,1fr)", gridTemplateRows:"1fr 1fr", gap:20 }}>
+        <ProductCard fill image={O("cup.png")} name="Mini teacups" description="Smaller cups mean more trips to the water cooler — a great tool for work-day loafing." field="var(--mint-wash)"/>
+        <ProductCard fill image={O("headphones.png")} name="Anti-disturbance headset" description="Add a WORKING sticker and stay relatively distraction free." field="var(--coral-wash)"/>
+        <ProductCard fill image={O("eye-mask.png")} name="Inspiration eye mask" description={'"Inspiration is building up…" — so nobody dares disturb you.'} field="var(--mint-wash)"/>
+        <ProductCard fill image={O("plant.png")} name="Desk plant" description="Reach out and touch it to feel its growth. Completely carefree." field="var(--coral-wash)"/>
+        <ProductCard fill image={O("toilet-paper.png")} name="Novelty toilet paper" description="The perfect companion for a paid break. Wash it and work." field="var(--mint-wash)"/>
+        <ProductCard fill image={O("hat.png")} name="Fight-back hat" description="For when you become the subject of discussion — relax by not going with the flow." field="var(--coral-wash)"/>
+      </div>
+      <p style={{ margin:0, fontSize:13, color:"var(--ink-50)" }}>PS: There is always some risk in everything you do, so please think before you go.</p>
+    </div>
+  );
+}
+
+const SPREADS = [
+  <CoverSpread/>,
+  <OpenerSpread/>,
+  <MethodSpread number={1} register="light" accent="#EBC3C6" field="var(--coral-wash)" regColor="#EBC3C6" regInk="#FFFFFF" idxLabelColor="#EBC3C6"
+    title="Small Sips" lead="The most achievable and carefree way of Cyberloafing."
+    indices={[{label:"Risk Index:",value:1},{label:"Leisure Index:",value:2},{label:"Realization Index:",value:5}]}
+    defuse="Swap your big mug for a mini teacup. More refills means more trips away from the desk. A supervisor won't notice if his employees change their cups."
+    img={O("cup.png")} imgName="teacup"/>,
+  <MethodSpread number={5} register="mid" accent="var(--coral)" field="var(--coral-wash)" idxLabelColor="#E68C81"
+    title="Ears Off" lead="A moderate break — quiet comfort without ever leaving your seat."
+    indices={[{label:"Risk Index:",value:3},{label:"Leisure Index:",value:4},{label:"Realization Index:",value:4}]}
+    defuse="Put on the anti-disturbance headset and add a WORKING label. Colleagues read it as deep focus and leave you alone — nod along now and then to keep the picture convincing."
+    img={O("headphones.png")} imgName="headphones"/>,
+  <MethodSpread number={10} register="high" accent="var(--red)" field="var(--red-tint)" idxLabelColor="#DC2A32"
+    title={'"Snack Time!"'} lead="The riskiest way to Cyberloafing, but also the most fun."
+    indices={[{label:"Risk Index:",value:6},{label:"Leisure Index:",value:5},{label:"Realization Index:",value:3}]}
+    defuse="When you get bored or hungry during class, sneak in some biscuits. Use a book to cover up and eat quickly to stay out of the teacher's way."
+    img={O("snack.png")} imgName="snack"/>,
+  <ApplianceSpread/>,
+];
+const LABELS = ["Cover","Section opener","Method · light","Method · moderate","Method · high","Appliance"];
+
+function App() {
+  const [i, setI] = useState(0);
+  return (
+    <div className="stage">
+      {SPREADS[i]}
+      <div className="nav">
+        <button onClick={()=>setI((i-1+SPREADS.length)%SPREADS.length)}>Prev</button>
+        <div style={{ display:"flex", alignItems:"center", gap:16 }}>
+          <span>{LABELS[i]}</span>
+          <div className="dots">{SPREADS.map((_,n)=>(
+            <button key={n} className={"dot"+(n===i?" on":"")} onClick={()=>setI(n)}/>))}</div>
+        </div>
+        <button onClick={()=>setI((i+1)%SPREADS.length)}>Next</button>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+<script>
+  const src = document.getElementById("app").textContent;
+  const out = Babel.transform(src, { presets: [["react", { runtime: "classic" }]] }).code;
+  (0, eval)(out);
+</script>
+</body>
+</html>

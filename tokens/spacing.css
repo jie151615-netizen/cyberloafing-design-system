@@ -1,0 +1,45 @@
+/* ============================================================
+   CYBERLOAFING — Spacing, radius, stroke, layout
+   The zine is built on generous white margins and a 4px base.
+   ============================================================ */
+
+:root {
+  /* Spacing scale (4px base) ------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* Page geometry (print zine, square-ish spread) ---------- */
+  --page-w: 960px;
+  --page-h: 960px;
+  --page-margin: 72px;      /* generous white gutter          */
+  --content-max: 560px;     /* body column width              */
+
+  /* Radius — the brand is mostly hard-edged; small rounding
+     shows up only on badges, chips, product cards.          */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-pill: 999px;
+
+  /* Stroke — monoline illustration + hairline rules -------- */
+  --stroke-hair: 1px;
+  --stroke-line: 2px;       /* default monoline weight        */
+  --stroke-bold: 3px;
+
+  /* Shadow — used sparingly; the zine is flat. A single soft
+     lift for floating product cards only.                   */
+  --shadow-card: 0 8px 24px rgba(19, 49, 79, 0.10);
+
+  /* Motion ------------------------------------------------- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+}

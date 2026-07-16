@@ -1,0 +1,59 @@
+/* ============================================================
+   CYBERLOAFING — Color tokens
+   A four-hue print palette on white: navy ink, alarm red,
+   soft coral, calm mint. White is the default page.
+   ============================================================ */
+
+:root {
+  /* Base palette ------------------------------------------- */
+  --ink: #13314f;        /* navy — body text + monoline art    */
+  --ink-80: #3f597170;   /* (kept below as solid mixes)        */
+  --red: #dc2b33;        /* alarm red — subtitles, high risk   */
+  --coral: #e68c81;      /* coral — spreads, moderate register */
+  --mint: #9ad5cd;       /* mint — objects, calm register      */
+  --paper: #ffffff;      /* the page                           */
+  --paper-warm: #fcfbf8; /* barely-warm off-white surface      */
+
+  /* Ink tints (solid, for text hierarchy) ------------------ */
+  --ink-90: #2b465f;
+  --ink-70: #5a7085;
+  --ink-50: #8997a6;
+  --ink-25: #c4ccd4;
+
+  /* Accent tints ------------------------------------------- */
+  --red-tint: #f6d4d6;        /* pale red wash                 */
+  --coral-soft: #f0b4ac;      /* lighter coral                 */
+  --coral-wash: #f9e2de;      /* coral surface wash            */
+  --mint-soft: #c2e7e1;       /* lighter mint                  */
+  --mint-wash: #e6f5f2;       /* mint surface wash             */
+
+  /* Semantic roles ----------------------------------------- */
+  --text-primary: var(--ink);
+  --text-muted: var(--ink-70);
+  --text-accent: var(--red);
+  --text-on-ink: var(--paper);
+  --text-on-coral: var(--paper);
+  --text-on-mint: var(--ink);
+
+  --surface-page: var(--paper);
+  --surface-alt: var(--paper-warm);
+  --surface-ink: var(--ink);
+  --surface-coral: var(--coral);
+  --surface-mint: var(--mint);
+
+  --line: var(--ink);          /* illustration + rule stroke   */
+  --line-soft: var(--ink-25);
+
+  /* Depth-of-loafing register (浅 / 中 / 高) ---------------- */
+  --register-light: #ebc3c6;       /* 浅摸鱼 — low risk        */
+  --register-mid: var(--coral);    /* 中摸鱼 — moderate        */
+  --register-high: var(--red);     /* 高摸鱼 — high risk       */
+
+  /* Index / rating stars ----------------------------------- */
+  --star-on: var(--red);
+  --star-off: var(--ink-25);
+
+  /* Links -------------------------------------------------- */
+  --link: var(--red);
+  --link-hover: var(--ink);
+}

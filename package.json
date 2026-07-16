@@ -1,0 +1,12 @@
+{
+  "name": "cyberloafing-design",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cyberloafing 摸鱼 design system",
+  "dependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  }
+}

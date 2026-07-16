@@ -1,0 +1,72 @@
+<!-- @dsCard group="Components" viewport="700x620" name="Content — index, method, product" subtitle="StarIndex, MethodCard, ProductCard" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../../styles.css" />
+<style>
+  body { margin: 0; background: var(--surface-page); font-family: var(--font-sans); }
+  #root { padding: 40px; display: flex; flex-direction: column; gap: 36px; }
+  .lbl { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-50); margin-bottom: 14px; }
+  .box { border-top: 2px solid var(--ink-25); padding-top: 16px; }
+  .split { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: start; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/plain" id="app">
+  const NS = window.Cyberloafing || Object.values(window).find(v => v && v.MethodCard && v.StarIndex) || {};
+  const { StarIndex, MethodCard, ProductCard } = NS;
+  function Demo() {
+    return (
+      <React.Fragment>
+        <div className="box">
+          <div className="lbl">StarIndex</div>
+          <StarIndex rows={[
+            { label: "Risk Index:", value: 3 },
+            { label: "Leisure Index:", value: 3 },
+            { label: "Realization Index:", value: 3 },
+          ]} />
+        </div>
+        <div className="box split">
+          <div>
+            <div className="lbl">MethodCard</div>
+            <MethodCard
+              number={10}
+              title={'"Snack Time!"'}
+              lead="The riskiest way to Cyberloafing, but also the most fun."
+              register="high"
+              accent="var(--red)"
+              indices={[
+                { label: "Risk Index:", value: 6 },
+                { label: "Leisure Index:", value: 5 },
+                { label: "Realization Index:", value: 3 },
+              ]}
+              defuse="When you get bored or hungry during class time, try sneaking in some biscuits. Use a book to cover up and quickly eat your food."
+            />
+          </div>
+          <div>
+            <div className="lbl">ProductCard</div>
+            <ProductCard
+              image="../../assets/illustrations/objects/cup.png"
+              name="Mini teacups"
+              description="A great tool for Cyberloafing during work days."
+              field="var(--mint-wash)"
+            />
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+<script>
+  const src = document.getElementById("app").textContent;
+  (0, eval)(Babel.transform(src, { presets: [["react", { runtime: "classic" }]] }).code);
+</script>
+</body>
+</html>

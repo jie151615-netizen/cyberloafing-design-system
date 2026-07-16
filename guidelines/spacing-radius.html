@@ -1,0 +1,18 @@
+<!-- @dsCard group="Spacing" viewport="700x170" name="Radius, stroke & shadow" subtitle="Mostly hard-edged; one soft card lift" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css">
+<style>
+ body{margin:0;font-family:var(--font-sans);background:var(--paper);padding:26px;display:flex;gap:36px;align-items:center;flex-wrap:wrap}
+ .demo{display:flex;flex-direction:column;align-items:center;gap:10px}
+ .b{width:80px;height:56px;background:var(--mint-wash);border:2px solid var(--ink)}
+ .t{font-size:11px;color:var(--ink-50)}
+ .stk{width:120px;border-top:2px solid var(--ink)}
+ .stk3{width:120px;border-top:3px solid var(--ink)}
+ .card{width:80px;height:56px;background:#fff;border-radius:8px;box-shadow:var(--shadow-card)}
+</style></head><body>
+ <div class="demo"><div class="b" style="border-radius:0"></div><span class="t">none 0px</span></div>
+ <div class="demo"><div class="b" style="border-radius:4px"></div><span class="t">sm 4px</span></div>
+ <div class="demo"><div class="b" style="border-radius:8px"></div><span class="t">md 8px</span></div>
+ <div class="demo"><div class="b" style="border-radius:999px;width:56px"></div><span class="t">pill</span></div>
+ <div class="demo"><div class="stk"></div><div class="stk3"></div><span class="t">stroke 2 / 3px</span></div>
+ <div class="demo"><div class="card"></div><span class="t">shadow-card</span></div>
+</body></html>

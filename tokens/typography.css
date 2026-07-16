@@ -1,0 +1,83 @@
+/* ============================================================
+   CYBERLOAFING — Typography tokens + webfonts
+   Typeface: HarmonyOS Sans (Latin). CJK falls back to system /
+   Noto Sans SC — the supplied TTFs are the Latin-only masters.
+   ============================================================ */
+
+@font-face {
+  font-family: "HarmonyOS Sans";
+  src: url("../assets/fonts/HarmonyOS_Sans_Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans";
+  src: url("../assets/fonts/HarmonyOS_Sans_Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans";
+  src: url("../assets/fonts/HarmonyOS_Sans_Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans";
+  src: url("../assets/fonts/HarmonyOS_Sans_Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans";
+  src: url("../assets/fonts/HarmonyOS_Sans_Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Families ------------------------------------------------ */
+  --font-sans: "HarmonyOS Sans", "PingFang SC", "Noto Sans SC",
+    "Microsoft YaHei", -apple-system, "Segoe UI", sans-serif;
+  /* CJK subtitles use the same stack — Harmony's Latin master
+     hands CJK glyphs off to the next fallback automatically.  */
+  --font-cjk: var(--font-sans);
+
+  /* Weights ------------------------------------------------- */
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+  --fw-black: 900;
+
+  /* Type scale (px) — a print-zine scale, headings run large  */
+  --fs-display: 120px;   /* IDENTITIES / WORK section titles   */
+  --fs-h1: 84px;         /* SNACK TIME! / PEACE AND QUIET       */
+  --fs-h2: 56px;         /* HOW                                */
+  --fs-h3: 30px;         /* TO DEFUSE BEING CAUGHT?            */
+  --fs-lead: 26px;       /* coral / red lead paragraphs        */
+  --fs-body: 20px;       /* running body copy                  */
+  --fs-caption: 15px;    /* index labels, footnotes            */
+  --fs-micro: 12px;      /* PS / disclaimer                    */
+
+  /* Line heights ------------------------------------------- */
+  --lh-tight: 0.98;      /* stacked display headings           */
+  --lh-heading: 1.06;
+  --lh-body: 1.4;
+  --lh-loose: 1.55;
+
+  /* Tracking ----------------------------------------------- */
+  --ls-display: -0.01em;
+  --ls-caption: 0.01em;
+  --ls-stamp: 0.24em;    /* WORKING / NOT IN CYBERLOAFING loops */
+
+  /* Semantic roles ----------------------------------------- */
+  --text-display: var(--fw-black);
+  --text-body-weight: var(--fw-regular);
+  --text-subtitle-weight: var(--fw-medium);
+}

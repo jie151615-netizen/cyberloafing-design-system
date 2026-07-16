@@ -15,6 +15,32 @@ what is being so earnestly explained.
 > 摸鱼 (mō yú) literally "touch fish", figuratively goofing off / cyberloafing.
 > The little outline fish is the mascot of the whole system.
 
+**Repository / 仓库：** [github.com/jie151615-netizen/cyberloafing-design-system](https://github.com/jie151615-netizen/cyberloafing-design-system)
+
+## Tech stack / 技术栈
+- **Components** — plain React (`.jsx`), no build step and no framework lock-in;
+  drop any component into a React 18+ project as-is.
+- **Styling** — CSS custom properties only (`styles.css` + `tokens/*.css`): colors,
+  typography, spacing. No CSS-in-JS, no utility classes, no component-scoped CSS.
+- **Type** — HarmonyOS Sans (Latin) shipped as a webfont (`assets/fonts/`); Chinese
+  falls back to the OS font stack (PingFang SC / Noto Sans SC / Microsoft YaHei).
+- **Sync target** — [Claude Design](https://claude.ai/design), via the `.design-sync/`
+  toolchain (`.design-sync/config.json`, `.design-sync/NOTES.md`) so the design agent
+  builds with these real components instead of generic ones.
+
+## Usage notes / 使用须知
+- Link `styles.css` once per page/app; every component reads its look from `var(--*)`
+  tokens in that file — never hard-code brand colors, spacing, or type sizes.
+- No provider/context is required — each component works standalone.
+- Every component ships a `<Name>.d.ts` (prop contract) and `<Name>.prompt.md`
+  (usage example) next to its `.jsx` — read those before composing a new usage.
+- Code in this repository is MIT-licensed (see `LICENSE`). The bundled HarmonyOS Sans
+  font and the zine-derived illustration assets under `assets/illustrations/` may
+  carry separate usage terms from their original sources (see "Sources" and
+  "Caveats / substitutions" below) — the MIT grant covers the code/component layer,
+  not necessarily those third-party-derived assets. Confirm rights before
+  redistributing the font or illustrations outside this project.
+
 ## Sources
 - `Cyberloafing2.pdf` — the 25-page master zine (working copy at `_analysis/`).
 - `矢量图/` (object icons) → `assets/illustrations/objects/` — the monoline + spot-color

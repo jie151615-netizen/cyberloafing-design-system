@@ -17,6 +17,10 @@ what is being so earnestly explained.
 
 **Repository / 仓库：** [github.com/jie151615-netizen/cyberloafing-design-system](https://github.com/jie151615-netizen/cyberloafing-design-system)
 
+**Also see:** [cyberloafing-arcade](https://github.com/jie151615-netizen/cyberloafing-arcade) —
+a trilingual (中/EN/IT) interactive arcade of three mini-games built on this
+system's visual language, maintained as its own standalone repo.
+
 ## Tech stack / 技术栈
 - **Components** — plain React (`.jsx`), no build step and no framework lock-in;
   drop any component into a React 18+ project as-is.
@@ -110,31 +114,6 @@ what is being so earnestly explained.
   drawn as a simple SVG (tail triangle + body ellipse + gill arc + dot eye).
 - Stars (★) are used for the index ratings — treat them as a data glyph, not decoration.
 
-## Arcade — interactive games
-- `games/arcade/index.html` — **Cyberloafing Arcade**, a standalone (no build step)
-  React app hosting three mini-games, one per loafing register:
-  - 🟢 **Water Wanderer** (浅摸鱼) — hold to fill a teacup; dodge a colleague or the
-    boss's glance with the matching cover story. Low stakes, very forgiving.
-  - 🟡 **Toilet Paper Runner** (中摸鱼) — click/scroll to tear off paper; the faster
-    you go, the bigger the multiplier and the bigger the risk. Footsteps outside
-    force a timed FLUSH to bank your points.
-  - 🔴 **Biscuit Stealth** (高摸鱼) — hold to eat while the teacher's back is turned.
-    One mistimed release when they turn around ends the run — the arcade's only
-    hard fail state.
-  - A shared 中/EN/IT language switch (top right) drives every piece of in-game
-    copy from structured `Strings` dictionaries — see `games/*/game.jsx`.
-  - Each level's mechanics live in its own `games/<level>/game.jsx` (compiled to a
-    plain-JS `game.js` via a local Babel pass — see `games/arcade/build-artifact.js`
-    for the compile step) so they can be loaded with a plain `<script src>`, no
-    runtime Babel and no CORS issues when opened straight from disk.
-  - `games/toilet-paper-runner/index.html` also runs the mid-risk level standalone.
-  - `games/vendor/` — locally vendored React/ReactDOM UMD builds (no CDN dependency,
-    works fully offline).
-  - `games/arcade/build-artifact.js` — bundles the whole arcade (tokens, fonts as
-    base64, all compiled games) into one self-contained HTML file for publishing
-    elsewhere (e.g. a Claude Artifact) with zero external dependencies.
-- **Play it live:** https://jie151615-netizen.github.io/cyberloafing-design-system/games/arcade/
-
 ## Index (manifest)
 - `styles.css` — entry point (imports the three token files).
 - `tokens/colors.css`, `tokens/typography.css`, `tokens/spacing.css` — foundations.
@@ -143,7 +122,6 @@ what is being so earnestly explained.
 - `guidelines/` — foundation specimen cards (Type, Colors, Spacing, Brand).
 - `components/` — reusable primitives (see below).
 - `ui_kits/zine/` — full-spread recreations of the manual.
-- `games/` — the interactive Cyberloafing Arcade (see above).
 - `SKILL.md` — portable skill wrapper.
 
 ### Components

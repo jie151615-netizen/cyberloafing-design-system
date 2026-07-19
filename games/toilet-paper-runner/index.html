@@ -1,0 +1,186 @@
+<!-- @dsCard group="Games" viewport="720x1000" name="Toilet Paper Runner — 卷纸狂人" subtitle="Mid-risk arcade mini-game (帯薪拉屎) with a 中/EN/IT language switch" -->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>卷纸狂人 · Toilet Paper Runner — Cyberloafing Arcade</title>
+<link rel="stylesheet" href="../../styles.css" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); font-family: var(--font-sans); color: var(--ink); }
+  body { min-height: 100vh; overscroll-behavior: none; }
+
+  #root { display: flex; justify-content: center; padding: var(--space-6) var(--space-4) var(--space-9); }
+  .page { width: 100%; max-width: 640px; display: flex; flex-direction: column; gap: var(--space-6); }
+
+  /* ---- Header: brand mark left, language switch right (never reflows) ---- */
+  .header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: var(--space-2); color: var(--ink); }
+  .brand span { font-weight: var(--fw-bold); letter-spacing: .04em; font-size: 15px; text-transform: uppercase; }
+
+  .lang-switch { display: flex; gap: 4px; border: 2px solid var(--ink); border-radius: var(--radius-pill); padding: 3px; flex: none; }
+  .lang-btn {
+    font: inherit; font-weight: var(--fw-bold); font-size: 13px; letter-spacing: .03em;
+    min-width: 40px; padding: 6px 10px; border: none; border-radius: var(--radius-pill);
+    background: transparent; color: var(--ink); cursor: pointer; transition: background var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard);
+  }
+  .lang-btn.active { background: var(--ink); color: var(--paper); }
+  .lang-btn:not(.active):hover { background: var(--mint-wash); }
+
+  /* ---- Masthead ---- */
+  .masthead { text-align: center; display: flex; flex-direction: column; gap: var(--space-2); }
+  .wordmark {
+    margin: 0; font-weight: var(--fw-black); text-transform: uppercase; color: var(--ink);
+    font-size: clamp(34px, 8vw, 64px); line-height: var(--lh-tight); letter-spacing: var(--ls-display);
+  }
+  .subtitle {
+    margin: 0; color: var(--red); font-weight: var(--fw-medium);
+    font-size: clamp(15px, 3vw, 19px); line-height: var(--lh-heading);
+    max-width: 480px; margin: 0 auto; overflow-wrap: break-word;
+  }
+  .tagline {
+    margin: 0; color: var(--ink-70); font-size: 14px; line-height: var(--lh-body);
+    max-width: 440px; margin: 0 auto; overflow-wrap: break-word;
+  }
+
+  /* ---- HUD (score + speed) ---- */
+  .hud { display: flex; gap: var(--space-5); justify-content: center; flex-wrap: wrap; }
+  .hud-block { flex: 1 1 180px; max-width: 240px; background: var(--paper-warm); border-radius: var(--radius-md); padding: var(--space-4); text-align: center; }
+  .hud-label { font-size: 12px; font-weight: var(--fw-bold); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-50); min-height: 2.4em; display: flex; align-items: center; justify-content: center; overflow-wrap: break-word; }
+  .hud-value { font-size: 36px; font-weight: var(--fw-black); color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1; margin-top: 4px; }
+  .hud-sub { margin-top: 6px; font-size: 13px; font-weight: var(--fw-medium); color: var(--ink-50); min-height: 1.4em; overflow-wrap: break-word; }
+  .hud-sub.at-risk { color: var(--coral); }
+  .hud-sub.danger-tag { color: var(--red); font-weight: var(--fw-bold); letter-spacing: .04em; }
+
+  .speed-bar { margin-top: 12px; height: 10px; border-radius: var(--radius-pill); background: var(--ink-25); overflow: hidden; }
+  .speed-fill { width: 100%; height: 100%; border-radius: var(--radius-pill); transform-origin: left center; transition: transform 120ms linear, background 120ms linear; }
+
+  /* ---- Toast (reserved space so nothing shifts) ---- */
+  .toast-zone { min-height: 30px; display: flex; align-items: center; justify-content: center; }
+  .toast {
+    font-size: 14px; font-weight: var(--fw-medium); padding: 6px 16px; border-radius: var(--radius-pill);
+    max-width: 480px; text-align: center; overflow-wrap: break-word; animation: fadeIn var(--dur-base) var(--ease-standard);
+  }
+  .toast.success { background: var(--mint-wash); color: var(--ink); }
+  .toast.fail { background: var(--red-tint); color: var(--red); }
+
+  /* ---- The roll itself ---- */
+  .roll-stage { display: flex; justify-content: center; }
+  .roll {
+    position: relative; width: 220px; cursor: grab; user-select: none; -webkit-user-select: none;
+    touch-action: none;
+  }
+  .roll:active { cursor: grabbing; }
+  .roll.danger svg { animation: shake 220ms infinite; }
+  .roll:focus-visible { outline: 3px solid var(--coral); outline-offset: 6px; border-radius: var(--radius-md); }
+
+  .idle-hint {
+    position: absolute; left: 50%; top: 100%; margin-top: 12px; transform: translateX(-50%);
+    width: max-content; max-width: min(300px, 80vw); font-size: 13px; color: var(--ink-50);
+    text-align: center; overflow-wrap: break-word; animation: fadeIn var(--dur-base) var(--ease-standard);
+  }
+
+  .floater {
+    position: absolute; top: 40%; left: 50%; font-size: 13px; font-weight: var(--fw-bold); color: var(--coral);
+    white-space: nowrap; pointer-events: none; animation: floatUp 900ms var(--ease-standard) forwards;
+  }
+
+  /* ---- Alert zone: fixed height reserved whether or not a warning is showing ---- */
+  .alert-zone { min-height: 96px; display: flex; align-items: center; justify-content: center; }
+  .warning-banner {
+    width: 100%; max-width: 460px; background: var(--red); color: var(--paper);
+    border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); text-align: center;
+    animation: fadeIn 150ms var(--ease-standard);
+  }
+  .warning-title { font-weight: var(--fw-black); text-transform: uppercase; font-size: clamp(16px, 4vw, 20px); letter-spacing: .01em; line-height: var(--lh-heading); }
+  .warning-body { margin-top: 4px; font-size: clamp(13px, 3vw, 15px); line-height: var(--lh-body); overflow-wrap: break-word; }
+  .warning-bar { margin-top: 10px; height: 6px; background: rgba(255,255,255,.35); border-radius: var(--radius-pill); overflow: hidden; }
+  .warning-bar-fill { height: 100%; background: var(--paper); border-radius: var(--radius-pill); }
+
+  .flush-row { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+  .flush-btn {
+    font: inherit; font-weight: var(--fw-bold); letter-spacing: .04em; text-transform: uppercase;
+    font-size: 16px; padding: 14px 40px; border-radius: var(--radius-pill); border: 3px solid var(--ink);
+    background: var(--paper); color: var(--ink-25); cursor: not-allowed; transition: all 150ms var(--ease-standard);
+    max-width: 90vw; overflow-wrap: break-word;
+  }
+  .flush-btn.armed {
+    background: var(--red); border-color: var(--red); color: var(--paper); cursor: pointer;
+    animation: pulseWarn 900ms infinite;
+  }
+  .flush-btn.armed:hover { background: var(--ink); border-color: var(--ink); }
+  .flush-hint { font-size: 12px; color: var(--ink-50); min-height: 1.4em; }
+
+  .footer-tip { text-align: center; font-size: 12px; color: var(--ink-50); max-width: 480px; margin: 0 auto; line-height: var(--lh-body); overflow-wrap: break-word; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes floatUp { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -46px); } }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    20% { transform: translateX(-3px) rotate(-0.6deg); }
+    40% { transform: translateX(3px) rotate(0.6deg); }
+    60% { transform: translateX(-2px) rotate(-0.4deg); }
+    80% { transform: translateX(2px) rotate(0.4deg); }
+  }
+  @keyframes pulseWarn {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220,43,51,.45); }
+    50% { box-shadow: 0 0 0 10px rgba(220,43,51,0); }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="../vendor/react.production.min.js"></script>
+<script src="../vendor/react-dom.production.min.js"></script>
+<script src="./game.js"></script>
+<script>
+  // Page-only chrome (brand header, masthead, lang switch). The actual
+  // game lives in game.jsx/game.js so it can be shared with the arcade
+  // shell at ../arcade/index.html without duplicating the mechanics.
+  const h = React.createElement;
+  const { useState } = React;
+  const mod = window.CyberloafingGames.toiletPaperRunner;
+
+  function FishMark(props) {
+    const size = (props && props.size) || 28, color = (props && props.color) || "var(--ink)";
+    return h("svg", { width: size, height: (size * 86) / 280, viewBox: "-3 -3 286 92", fill: "none", style: { display: "block" } },
+      h("g", { stroke: color, strokeWidth: "6", fill: "none", strokeLinejoin: "round", strokeLinecap: "round", vectorEffect: "non-scaling-stroke" },
+        h("path", { d: "M0 0 L30 43 L0 86 Z" }),
+        h("path", { d: "M28 43 C58 20 118 4 167 5 C212 6 252 22 279 38 C281 42 281 44 279 48 C252 64 212 80 167 81 C118 82 58 66 28 43 Z" }),
+        h("path", { d: "M230 15 Q214 43 230 72" })
+      ),
+      h("circle", { cx: "252", cy: "39", r: "5", fill: color })
+    );
+  }
+
+  function App() {
+    const [lang, setLang] = useState("zh");
+    const t = mod.Strings[lang];
+
+    return h("div", { className: "page" },
+      h("header", { className: "header" },
+        h("div", { className: "brand" }, h(FishMark), h("span", null, "Cyberloafing Arcade")),
+        h("div", { className: "lang-switch", role: "group", "aria-label": "Language / 语言 / Lingua" },
+          ["zh", "en", "it"].map((code) => h("button", {
+            key: code,
+            className: "lang-btn" + (lang === code ? " active" : ""),
+            onClick: () => setLang(code),
+            "aria-pressed": lang === code,
+            "aria-label": code === "zh" ? "中文" : code === "en" ? "English" : "Italiano",
+          }, code === "zh" ? "中" : code.toUpperCase()))
+        )
+      ),
+      h("div", { className: "masthead" },
+        h("h1", { className: "wordmark" }, t.levelNameEn),
+        h("p", { className: "subtitle" }, t.subtitle),
+        h("p", { className: "tagline" }, t.tagline)
+      ),
+      h(mod.GameCore, { lang })
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(h(App));
+</script>
+</body>
+</html>

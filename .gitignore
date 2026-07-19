@@ -6,3 +6,4 @@ ds-bundle/
 .design-sync/node_modules
 .DS_Store
 .claude/settings.local.json
+games/arcade/artifact-bundle.html
